@@ -1,14 +1,13 @@
 import React from "react";
 import { DashboardContainer } from "../DashboardPage/style";
+import ListFilterTable from "../../components/ListFilterTable";
 
 const ListPage = () => {
 
     return (
-        <>
-            <DashboardContainer>
-                <p>LIST PAGE</p>
-            </DashboardContainer>
-        </>
+        <DashboardContainer>
+            <ListFilterTable />
+        </DashboardContainer>
     );
 }
 

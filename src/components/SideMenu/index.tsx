@@ -12,9 +12,7 @@ interface ISideMenu {
 const SideMenu: FC<ISideMenu> = (props): JSX.Element => {
     const navigate = useNavigate();
     const { activeMenu } = useAppSelector((store) => store.sideMenu);
-    console.log("activeM>: ", activeMenu)
     const dispatch = useAppDispatch();
-
 
     return (
         <MenuContainer>

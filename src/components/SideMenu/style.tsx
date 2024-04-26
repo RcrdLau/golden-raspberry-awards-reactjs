@@ -17,9 +17,7 @@ export const MenuListItemActive = styled.li`
     cursor: pointer;
     color:  blue;
     font-weight: bold;
-    `;
-/* color: ${props => props.active ? "blue" : "black"}; */
-/* font-weight: ${props => props.active ? "bold" : "normal"}; */
+`;
 
 export const MenuListItem = styled.li`
     margin-bottom: 6px;

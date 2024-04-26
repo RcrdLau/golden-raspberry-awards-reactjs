@@ -7,6 +7,7 @@ export const HeaderMenu = styled.header`
     background-color: #384857;
     align-items: center;
     flex-direction: row;
+    padding: 5px 0;
 `;
 
 export const HeaderTitle = styled.h1`

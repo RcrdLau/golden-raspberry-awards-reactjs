@@ -37,17 +37,4 @@ export const counterSlice = createSlice({
             state.measureData = action.payload;
         },
     },
-    // extraReducers: (builder) => {
-    //     builder
-    //         .addCase(counterIncrementAsync.fulfilled, (state, action) => {
-    //             state.counter += action.payload;
-    //             state.loading = false;
-    //         })
-    //         .addCase(counterIncrementAsync.pending, (state, action) => {
-    //             state.loading = true;
-    //         })
-    //         .addCase(counterIncrementAsync.rejected, (state, action) => {
-    //             console.log("rejected");
-    //         });
-    // },
 });
