@@ -1,21 +1,24 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { HeaderMenu, HeaderTitle } from "./style";
 import { useAppDispatch } from "../../store/hooks/useAppDispatch";
-import { counterIncrement } from "../../store/counter/actions";
+import { menuActive } from "../../store/sideMenu/actions";
 
-// import { useNavigate } from "react-router-dom";
-
-interface IHeader {
-    firstName?: string,
-}
-
-const Header: FC<IHeader> = (props): JSX.Element => {
-    // let navigate = useNavigate();
+const Header = () => {
     const dispatch = useAppDispatch();
+    const currentUrl = window.location.pathname;
+    console.log("currentUrl: ", currentUrl)
+    useEffect(() => {
+        if (currentUrl === "/dashboard") {
+            dispatch(menuActive("dashboard"))
+        } else {
+            dispatch(menuActive("list"))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <HeaderMenu>
-            <HeaderTitle>Frontend React Test</HeaderTitle><button onClick={() => dispatch(counterIncrement())}>TESTE</button>
+            <HeaderTitle>Frontend React Test</HeaderTitle>
         </HeaderMenu>
     );
 }
