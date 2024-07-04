@@ -16,6 +16,9 @@ execute a linha de comando:
 ### `npm install / yarn install`
 ### `npm start / yarn`
 
+Para executar os testes unitários, execute:
+### `npm run test`
+
 Ferramentas utilizadas: 
     <ol>
         <li>Reactjs</li>
