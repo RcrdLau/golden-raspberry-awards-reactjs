@@ -6,7 +6,6 @@ import { menuActive } from "../../store/sideMenu/actions";
 const Header = () => {
     const dispatch = useAppDispatch();
     const currentUrl = window.location.pathname;
-    console.log("currentUrl: ", currentUrl)
     useEffect(() => {
         if (currentUrl === "/dashboard") {
             dispatch(menuActive("dashboard"))

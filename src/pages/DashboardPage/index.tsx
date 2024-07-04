@@ -31,12 +31,14 @@ const DashboardPage = () => {
                     tableTitle={"year"}
                     tableSubtitle={"win count"}
                     data={tableMultipleWinners}
+                    dataTestId={"multiple-winners"}
                 />
                 <DashboardCommonTable
                     title={"top 3 studios with winners"}
                     tableTitle={"name"}
                     tableSubtitle={"win count"}
                     data={tableTopStudios}
+                    dataTestId={"top-3"}
                 />
             </DashboardCommonTableWrapper>
             <DashboardTableWrapper>

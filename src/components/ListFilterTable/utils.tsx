@@ -1,81 +1,107 @@
 import axios from "axios";
 import { apiBaseUrl } from "../../constants/apiBaseUrl";
 import { TableText } from "../DashboardCommonTable/style";
-import { ListTablesRow } from "./style";
+import { ListPaginationButton, ListTablesRow } from "./style";
 import { Dispatch } from "redux";
-import { tableListWinners } from "../../store/tables/actions";
+import { tableListWinners, paginationNumber } from "../../store/tables/actions";
+import { Dispatch as ReactDispatch, SetStateAction } from "react";
 
-export const renderRows = (data?: any) => {
+export const renderPagination = (
+    paginationNumber: number,
+    pageNumber: string,
+    setPageNumber: ReactDispatch<SetStateAction<string>>,
+) => {
     const rows = [];
-
-    if (data.length === 1) {
-
-        for (let i = 0; i < 15; i++) {
-            rows.push(
-                <ListTablesRow key={i} bgcolor={i % 2 === 0 ? "white" : "whitesmoke"}>
-                    <TableText></TableText>
-                    <TableText></TableText>
-                    <TableText></TableText>
-                    <TableText></TableText>
-                </ListTablesRow>
-            );
-        }
-    } else {
-        for (let i = 0; i < 15; i++) {
-            rows.push(
-                <ListTablesRow key={i} bgcolor={i % 2 === 0 ? "white" : "whitesmoke"}>
-                    <TableText>{data[i].id ? data[i].id : ""}</TableText>
-                    <TableText>{data[i].year ? data[i].year : ""}</TableText>
-                    <TableText>{data[i].title ? data[i].title : ""}</TableText>
-                    <TableText>{data[i].winner === true ? "Yes" : "No"}</TableText>
-                </ListTablesRow>
-            );
-
-        }
-        return rows;
+    for (let i = 0; i < paginationNumber; i++) {
+        rows.push(
+            <ListPaginationButton
+                key={`id-${i}`}
+                active={pageNumber === String(i + 1)}
+                onClick={() => setPageNumber(String(i + 1))}
+            >
+                {i + 1}
+            </ListPaginationButton>
+        );
     }
+    return rows;
 }
-const generateRandomString = () => {
-    return Math.random().toString(36).substring(7);
-};
 
-// Função para gerar um valor booleano aleatório
-const generateRandomBoolean = () => {
-    return Math.random() < 0.5; // Gera true ou false com probabilidade de 50%
-};
-
-const RandomListData = Array(75).fill(null).map((_, index) => {
-    const pageNumber = Math.floor(index / 15) + 1; // Calcular o número da página
-    return {
-        id: String(index + 1), // Incrementa o id em 1
-        title: `Title ${generateRandomString()}`, // Muda a string do title
-        studios: `Studios ${generateRandomString()}`, // Muda a string do studios
-        producers: `Producers ${generateRandomString()}`, // Muda a string do producers
-        winner: generateRandomBoolean(), // Gera um valor booleano aleatório para winner
-        year: 2024,
-        page: pageNumber // Adiciona o número da página
-    };
-});
+export const renderRows = (data: any, pageNumber: string) => {
+    const rows = [];
+    let position = Number(pageNumber) * 15
+    let i = position - 15
+    for (i; i < position; i++) {
+        if (data[0].id === "" || !!!data[i]) {
+            rows.push(
+                <ListTablesRow key={i} bgcolor={i % 2 === 0 ? "white" : "whitesmoke"}>
+                    <TableText></TableText>
+                    <TableText></TableText>
+                    <TableText></TableText>
+                    <TableText></TableText>
+                </ListTablesRow>
+            );
+        } else {
+            rows.push(
+                <ListTablesRow key={i} bgcolor={i % 2 === 0 ? "white" : "whitesmoke"}>
+                    <TableText>{data[i] ? data[i].id : ""}</TableText>
+                    <TableText>{data[i] ? data[i].year : ""}</TableText>
+                    <TableText>{data[i] ? data[i].title : ""}</TableText>
+                    <TableText>{data[i] && data[i].winner === true ? "Yes" : "No"}</TableText>
+                </ListTablesRow>
+            );
+        }
+    }
+    return rows;
+}
 
 export const LoadListData = async (
-    pageNumber: string,
-    winnerValue: boolean,
     yearValue: string,
-    dispatch: Dispatch
+    winnerValue: string,
+    dispatch: Dispatch,
+    notify: any
 ) => {
     try {
-        const response = await axios.get(apiBaseUrl + `?page=1&size=15&winner=true&year=20
-        23`)
-        // const response = await axios.get(apiBaseUrl + `?page=${pageNumber}&size=15&winner=${winnerValue}&year=${yearValue}`)
+        let convertWinnerValue: string = ""
+        switch (winnerValue) {
+            case "all":
+                convertWinnerValue = ""
+                break;
+            case "yes":
+                convertWinnerValue = "true"
+                break;
+            case "no":
+                convertWinnerValue = "false"
+                break;
+            default:
+                convertWinnerValue = ""
+        }
 
-        // const data = response.data;
-        const data = RandomListData;
+        const response = await axios.get(apiBaseUrl + `?page=0&size=15&winner=${convertWinnerValue}&year=${yearValue}`)
 
-        let listWinnersArray = RandomListData.filter(item => item.page === Number(pageNumber));
+        const data = response.data;
+        if (response.data.content.length === 0) {
+            notify("Nenhum resultado encontrado para o ano escolhido.")
+        } else {
+            let listWinnersArray: any[] = []
 
-        dispatch(tableListWinners(listWinnersArray));
+            data.content.forEach((contentItem: any, index: number) => {
+                listWinnersArray.push({
+                    id: contentItem.id ? contentItem.id : String(index),
+                    title: contentItem.title ? contentItem.title : "",
+                    studios: "",
+                    producers: "",
+                    winner: contentItem.winner ? contentItem.winner : "",
+                    page: 0,
+                    year: contentItem.year ? contentItem.year : "",
+                })
+            })
+
+            dispatch(paginationNumber(data.totalPages))
+            dispatch(tableListWinners(listWinnersArray));
+        }
+
     } catch (error) {
         console.error('Erro ao buscar dados:', error);
+        notify("Algo deu errado: " + error)
     }
-};
-
+}

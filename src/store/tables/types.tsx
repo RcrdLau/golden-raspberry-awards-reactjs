@@ -23,7 +23,7 @@ export type MovieYearWinners = {
     id: string,
     title: string,
     year: number,
-}
+}[]
 
 export type ListWinners = {
     id: string;

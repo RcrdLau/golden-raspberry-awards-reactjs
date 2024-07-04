@@ -14,16 +14,16 @@ import { HandleSearch } from "./utils";
 const DashboardListTable = () => {
     const dispatch = useAppDispatch();
     const { tableMovieYearWinners } = useAppSelector((store) => store.table);
-    const [searchValue, setSearchValue] = useState<number | undefined>()
+    const [searchValue, setSearchValue] = useState<number>(0)
     const [errorText, setErrorText] = useState<string>("")
 
     return (
         <CommonTableContainer>
-            <CardTitle>list movie winners by year</CardTitle>
+            <CardTitle data-testid="movie-winners">list movie winners by year</CardTitle>
             <SearchContainer>
                 <SearchInput
                     type="number"
-                    value={searchValue}
+                    value={searchValue === 0 ? "" : searchValue}
                     onChange={(e) => { setSearchValue(Number(e.target.value)) }}
                     placeholder="Search by year"
                     min="0"
@@ -61,15 +61,15 @@ const DashboardListTable = () => {
                     <TableTitle>year</TableTitle>
                     <TableTitle>title</TableTitle>
                 </TableHeader3Col>
-                {tableMovieYearWinners.id !== "" && (
-                    <TablesRow3Col bgcolor="white">
-                        <TableText>{tableMovieYearWinners.id}</TableText>
-                        <TableText>{tableMovieYearWinners.year}</TableText>
-                        <TableText>{tableMovieYearWinners.title}</TableText>
+                {tableMovieYearWinners[0].id !== "" && tableMovieYearWinners.map((winnersItem: any) => (
+                    < TablesRow3Col bgcolor="white" key={winnersItem.id}>
+                        <TableText>{winnersItem.id}</TableText>
+                        <TableText>{winnersItem.year}</TableText>
+                        <TableText data-testid="winner-title">{winnersItem.title}</TableText>
                     </TablesRow3Col>
-                )}
+                ))}
             </TableContainer>
-        </CommonTableContainer>
+        </CommonTableContainer >
     );
 }
 

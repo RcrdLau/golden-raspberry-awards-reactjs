@@ -25,7 +25,7 @@ const DashboardIntervalTable = () => {
 
     return (
         <CommonTableContainer>
-            <CardTitle>producers with longest and shortest interval between wins</CardTitle>
+            <CardTitle data-testid="producers">producers with longest and shortest interval between wins</CardTitle>
             <CardSubtitle>maximum</CardSubtitle>
             <TableContainer>
                 <TableHeader4Col>
@@ -35,7 +35,7 @@ const DashboardIntervalTable = () => {
                     <TableTitle>following year</TableTitle>
                 </TableHeader4Col>
                 <TablesRow4Col bgcolor="white">
-                    <TableText>{tableIntervalWinners.maxProducer}</TableText>
+                    <TableText data-testid="max-producer">{tableIntervalWinners.maxProducer}</TableText>
                     <TableText>{tableIntervalWinners.maxInterval}</TableText>
                     <TableText>{tableIntervalWinners.maxPreviousWin}</TableText>
                     <TableText>{tableIntervalWinners.maxFollowingWin}</TableText>
@@ -50,7 +50,7 @@ const DashboardIntervalTable = () => {
                     <TableTitle>following year</TableTitle>
                 </TableHeader4Col>
                 <TablesRow4Col bgcolor="white">
-                    <TableText>{tableIntervalWinners.minProducer}</TableText>
+                    <TableText data-testid="min-producer">{tableIntervalWinners.minProducer}</TableText>
                     <TableText>{tableIntervalWinners.minInterval}</TableText>
                     <TableText>{tableIntervalWinners.minPreviousWin}</TableText>
                     <TableText>{tableIntervalWinners.minFollowingWin}</TableText>

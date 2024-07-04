@@ -13,8 +13,8 @@ export const LoadMultipleWinnersData = async (dispatch: Dispatch) => {
 
         for (let i = 0; i < 3; i++) {
             listWinners.push({
-                year: data[i].year,
-                winCount: data[i].winnerCount
+                year: data[i].year ? data[i].year : "",
+                winCount: data[i].winnerCount ? data[i].winnerCount : ""
             });
         }
 

@@ -6,4 +6,5 @@ export const {
     tableIntervalWinners,
     tableMovieYearWinners,
     tableListWinners,
+    paginationNumber,
 } = tableSlice.actions;

@@ -1,39 +1,68 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useState
+} from "react";
 import {
     CardTitle,
     TableContainer,
 } from "../DashboardCommonTable/style";
 import { useAppDispatch } from "../../store/hooks/useAppDispatch";
-import { ListContainer, ListPagination, ListPaginationButton, ListSelect, ListTableHeader, ListTableHeaderContainer, ListTableTitle, YearInput, } from "./style";
-import { LoadListData, renderRows } from "./utils";
+import {
+    ListContainer,
+    ListPagination,
+    ListPaginationButton,
+    ListSelect,
+    ListTableHeader,
+    ListTableHeaderContainer,
+    ListTableTitle,
+    YearInput,
+} from "./style";
+import {
+    LoadListData,
+    renderPagination,
+    renderRows
+} from "./utils";
 import { useAppSelector } from "../../store/hooks/useAppSelector";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import { listArrayMock } from "../../mocks/ListPaginationMock";
 
 const ListFilterTable = () => {
     const dispatch = useAppDispatch();
-    const { tableListWinners } = useAppSelector((store) => store.table);
-    const [yearValue, setYearValue] = useState<string>("2024")
-    const [winnerValue, setWinnerValue] = useState<boolean>(true)
+    const { tableListWinners, paginationNumber } = useAppSelector((store) => store.table);
+    // let paginationNumber = 3
+    // se quiser testar o funcionamento da paginação, use o paginationNumber = 3 e insira o listArrayMock na função 'renderRows()' abaixo no codigo
+    const [yearValue, setYearValue] = useState<string>("")
+    const [winnerValue, setWinnerValue] = useState<string>("all")
     const [pageNumber, setPageNumber] = useState<string>("1")
-
-    const handleChange = (event: { target: { value: any; }; }) => {
-        event.target.value === "yes" ? setWinnerValue(true) : setWinnerValue(false)
-    };
-
-    useEffect(() => {
+    const notify = (text: string) => toast(text);
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value;
+        setWinnerValue(value);
         LoadListData(
-            pageNumber,
-            winnerValue,
             yearValue,
-            dispatch
+            value,
+            dispatch,
+            notify
         )
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pageNumber])
+        setPageNumber("1")
+    };
 
     return (
         <ListContainer>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover
+                theme="dark"
+            />
             <ListTableHeaderContainer>
-                <CardTitle>list movies</CardTitle>
+                <CardTitle data-testid="list-movies">list movies</CardTitle>
                 <TableContainer>
                     <ListTableHeader>
                         <ListTableTitle><h1>ID</h1></ListTableTitle>
@@ -45,6 +74,15 @@ const ListFilterTable = () => {
                                 onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => {
                                     setYearValue(e.target.value)
                                 }}
+                                onBlur={(e: { target: { value: string }; }) => {
+                                    LoadListData(
+                                        e.target.value,
+                                        winnerValue,
+                                        dispatch,
+                                        notify
+                                    )
+                                    setPageNumber("1")
+                                }}
                                 placeholder="Filter by year"
                                 min="0"
                                 max={2024}
@@ -54,13 +92,15 @@ const ListFilterTable = () => {
                         <ListTableTitle><h1>title</h1></ListTableTitle>
                         <ListTableTitle>
                             <h1>winner?</h1>
-                            <ListSelect onChange={() => handleChange}>
+                            <ListSelect onChange={handleChange}>
+                                <option value="all">Yes/No</option>
                                 <option value="yes">Yes</option>
                                 <option value="no">No</option>
                             </ListSelect>
                         </ListTableTitle>
                     </ListTableHeader>
-                    {renderRows(tableListWinners)}
+                    {renderRows(tableListWinners, pageNumber)}
+                    {/* {renderRows(listArrayMock, pageNumber)} */}
                 </TableContainer>
                 <ListPagination>
                     <ListPaginationButton active={false} onClick={() => setPageNumber("1")}>{"|<"}</ListPaginationButton>
@@ -70,43 +110,18 @@ const ListFilterTable = () => {
                     >
                         {"<"}
                     </ListPaginationButton>
-                    <ListPaginationButton
-                        active={pageNumber === "1"}
-                        onClick={() => setPageNumber("1")}
-                    >
-                        1
-                    </ListPaginationButton>
-                    <ListPaginationButton
-                        active={pageNumber === "2"}
-                        onClick={() => setPageNumber("2")}
-                    >
-                        2
-                    </ListPaginationButton>
-                    <ListPaginationButton
-                        active={pageNumber === "3"}
-                        onClick={() => setPageNumber("3")}
-                    >
-                        3
-                    </ListPaginationButton>
-                    <ListPaginationButton
-                        active={pageNumber === "4"}
-                        onClick={() => setPageNumber("4")}
-                    >
-                        4
-                    </ListPaginationButton>
-                    <ListPaginationButton
-                        active={pageNumber === "5"}
-                        onClick={() => setPageNumber("5")}
-                    >
-                        5
-                    </ListPaginationButton>
+                    {renderPagination(
+                        paginationNumber,
+                        pageNumber,
+                        setPageNumber
+                    )}
                     <ListPaginationButton
                         active={false}
-                        onClick={() => pageNumber !== "5" && setPageNumber(String(Number(pageNumber) + 1))}
+                        onClick={() => pageNumber !== String(paginationNumber) && setPageNumber(String(Number(pageNumber) + 1))}
                     >
                         {">"}
                     </ListPaginationButton>
-                    <ListPaginationButton active={false} onClick={() => setPageNumber("5")}>{">|"}</ListPaginationButton>
+                    <ListPaginationButton active={false} onClick={() => setPageNumber(String(paginationNumber))}>{">|"}</ListPaginationButton>
                 </ListPagination>
             </ListTableHeaderContainer>
         </ListContainer>

@@ -13,13 +13,13 @@ const SideMenu: FC<ISideMenu> = (props): JSX.Element => {
     const navigate = useNavigate();
     const { activeMenu } = useAppSelector((store) => store.sideMenu);
     const dispatch = useAppDispatch();
-
     return (
         <MenuContainer>
             <MenuList>
                 {activeMenu === "dashboard" ?
                     (
                         < MenuListItemActive
+                            data-testid="navigate-dashboard"
                             onClick={() => {
                                 navigate("/dashboard")
                                 dispatch(menuActive("dashboard"))
@@ -30,6 +30,7 @@ const SideMenu: FC<ISideMenu> = (props): JSX.Element => {
                     ) :
                     (
                         <MenuListItem
+                            data-testid="navigate-dashboard"
                             onClick={() => {
                                 navigate("/dashboard")
                                 dispatch(menuActive("dashboard"))
@@ -42,6 +43,7 @@ const SideMenu: FC<ISideMenu> = (props): JSX.Element => {
                 {activeMenu === "list" ?
                     (
                         < MenuListItemActive
+                            data-testid="navigate-list"
                             onClick={() => {
                                 navigate("/list")
                                 dispatch(menuActive("list"))
@@ -52,6 +54,7 @@ const SideMenu: FC<ISideMenu> = (props): JSX.Element => {
                     ) :
                     (
                         <MenuListItem
+                            data-testid="navigate-list"
                             onClick={() => {
                                 navigate("/list")
                                 dispatch(menuActive("list"))

@@ -8,6 +8,7 @@ type ITableProps = {
     tableIntervalWinners: IntervalWinners;
     tableMovieYearWinners: MovieYearWinners;
     tableListWinners: ListWinners;
+    paginationNumber: number;
 };
 
 const tableInitialState: ITableProps = {
@@ -23,20 +24,21 @@ const tableInitialState: ITableProps = {
         minPreviousWin: 0,
         minFollowingWin: 0,
     },
-    tableMovieYearWinners: {
+    tableMovieYearWinners: [{
         id: "",
         title: "",
         year: 0,
-    },
+    }],
     tableListWinners: [{
         id: "",
         title: "",
         studios: "",
         producers: "",
-        winner: false,
-        page: 1,
-        year: 2024,
-    },]
+        winner: true,
+        page: 0,
+        year: 1980,
+    }],
+    paginationNumber: 1,
 }
 
 export const tableSlice = createSlice({
@@ -57,6 +59,9 @@ export const tableSlice = createSlice({
         },
         tableListWinners: (state, action: PayloadAction<ListWinners>) => {
             state.tableListWinners = action.payload;
+        },
+        paginationNumber: (state, action: PayloadAction<number>) => {
+            state.paginationNumber = action.payload;
         },
     },
 });

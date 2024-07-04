@@ -23,26 +23,25 @@ export const HandleSearch = async (
                 apiBaseUrl + `?winner=true&year=${searchValue}`
             );
 
-            const data = response.data[0];
-
+            const data = response.data;
             if (data === undefined) {
-
                 setErrorText("Não foi encontrado nenhum resultado para este ano.")
-                let listMovieYearWinners = {
+                let listMovieYearWinners = [{
                     id: "",
                     title: "",
                     year: 0,
-                }
-
+                }]
                 dispatch(tableMovieYearWinners(listMovieYearWinners));
 
             } else {
-                let listMovieYearWinners = {
-                    id: data.id,
-                    title: data.title,
-                    year: data.year,
-                }
-
+                let listMovieYearWinners: any[] = []
+                data.forEach((dataItem: any) => {
+                    listMovieYearWinners.push({
+                        id: dataItem.id,
+                        title: dataItem.title,
+                        year: dataItem.year,
+                    })
+                })
                 dispatch(tableMovieYearWinners(listMovieYearWinners));
             }
 
